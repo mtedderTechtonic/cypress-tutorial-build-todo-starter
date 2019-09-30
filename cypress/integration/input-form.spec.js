@@ -1,7 +1,10 @@
 describe('Input form', () => {
 	context('Visits the page where the application lives', () => {
-		it('Focuses input on load', () => {
+        beforeEach(() => {
             cy.visit('http://localhost:3030')
+        })
+		it('Focuses input on load', () => {
+            
             
             cy.focused()
                 .should('have.class', 'new-todo')
@@ -9,7 +12,6 @@ describe('Input form', () => {
         
         it.only('Accepts input', () => {
             const typedText = 'Buy Coffee'
-            cy.visit('http://localhost:3030')
 
             cy.get('.new-todo')
             .type(typedText)
