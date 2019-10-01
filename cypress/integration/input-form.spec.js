@@ -1,7 +1,7 @@
 describe('Input form', () => {
 	context('Adds todo to input field', () => {
 		beforeEach(() => {
-			cy.visit('/')
+			cy.seedAndVisit([])
 		})
 
 		it('Focuses input on load', () => {
@@ -36,7 +36,7 @@ describe('Input form', () => {
 					.and('contain', itemText)
 			})
 
-			it.only('Shows an error message on a failed submission', () => {
+			it('Shows an error message on a failed submission', () => {
 				cy.route({
 					url: '/api/todos',
 					method: 'POST',
