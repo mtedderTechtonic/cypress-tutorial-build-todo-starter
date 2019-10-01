@@ -3,7 +3,7 @@ import {BrowserRouter as Router, Route} from 'react-router-dom'
 import TodoForm from './TodoForm'
 import TodoList from './TodoList'
 import Footer from './Footer'
-import { saveTodo, loadTodos } from '../lib/service'
+import { saveTodo, loadTodos, destroyTodo } from '../lib/service'
 
 
 export default class TodoApp extends Component {
@@ -16,6 +16,7 @@ export default class TodoApp extends Component {
     }
     this.handleNewTodoChange = this.handleNewTodoChange.bind(this)
     this.handleTodoSubmit = this.handleTodoSubmit.bind(this)
+    this.handleDelete = this.handleDelete.bind(this)
   }
 
   componentDidMount () {
@@ -37,7 +38,14 @@ export default class TodoApp extends Component {
     })
   }
 
+  handleDelete (id) {
+    destroyTodo(id).then(() => this.setState({
+      todos: this.state.todos.filter(t => t.id !== id)
+    }))
+  }
+
   render () {
+    const remaining = this.state.todos.filter(t => !t.isComplete).length
     return (
       <Router>
         <div>
@@ -47,9 +55,9 @@ export default class TodoApp extends Component {
             <TodoForm currentTodo={this.state.currentTodo} handleNewTodoChange={this.handleNewTodoChange} handleTodoSubmit={this.handleTodoSubmit} />
           </header>
           <section className="main">
-            <TodoList todos={this.state.todos} />
+            <TodoList todos={this.state.todos} handleDelete={this.handleDelete} />
           </section>
-          <Footer />
+          <Footer remaining={remaining}/>
         </div>
       </Router>
     )
