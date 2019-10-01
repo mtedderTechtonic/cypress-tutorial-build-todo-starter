@@ -9,7 +9,7 @@ describe('Input form', () => {
 		})
 
 		it('Accepts input', () => {
-			const typedText = 'Buy Coffee'
+			const typedText = 'Buy coffee'
 
 			cy.get('.new-todo')
 				.type(typedText)
@@ -17,9 +17,11 @@ describe('Input form', () => {
         })
         
         context('Form submission', () => {
-            it('Adds a new todo on submit', () => {
-                const itemText = 'Buy Eggs'
+            beforeEach(() => {
                 cy.server()
+            })
+            it('Adds a new todo on submit', () => {
+                const itemText = 'Buy eggs'
                 cy.route('POST', '/api/todos', {
                     name: itemText,
                     id: 1,
@@ -32,6 +34,18 @@ describe('Input form', () => {
                 cy.get('.todo-list li')
                     .should('have.length', 1)
                     .and('contain', itemText)
+            })
+
+            it.only('Shows an error message on a failed submission', () => {
+                cy.route({
+                    url: '/api/todos',
+                    method: 'POST',
+                    status: 500,
+                    response: {}
+                })
+
+                cy.get('.new-todo').type('test{enter}')
+                cy.get('.todo-list li').should('not.exist')
             })
         })
 	})
